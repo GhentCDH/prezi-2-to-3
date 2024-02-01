@@ -70,7 +70,8 @@ class Service(object):
             return self.return_json({'okay': 0, 'error': 'URLs must use HTTP or HTTPS', 'url': url})
         try:
             (data, webhandle) = self.fetch(url)
-        except:
+        except Exception as error:
+            print(error)
             return self.return_json({'okay': 0, 'error': 'Cannot fetch url', 'url': url})
 
         # catch if this is invalid JSON e.g. using a non IIIF resoruces like www.google.com

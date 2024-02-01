@@ -1,5 +1,8 @@
-FROM grahamdumpleton/mod-wsgi-docker:python-3.5-onbuild
+FROM tecktron/python-waitress:python-3.10-slim
+
+COPY ./ /app
+
+RUN pip install --no-cache-dir -r requirements.txt
+
 # Run tests:
 RUN python setup.py test
-
-CMD [ "prezi2to3.wsgi" ]

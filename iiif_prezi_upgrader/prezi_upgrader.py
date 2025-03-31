@@ -35,7 +35,9 @@ FLAGS = {
     "attribution_label": {"prop": "attribution_label", "default": "Attribution",
     	"description": "The label to use for requiredStatement mapping from attribution"},
     "license_label": {"prop": "license_label", "default": "Rights/License",
-    	"description": "The label to use for non-conforming license URIs mapped into metadata"}
+    	"description": "The label to use for non-conforming license URIs mapped into metadata"},
+	"user_agent": {"prop": "user_agent", "default": "iiif-prezi2to3-upgrader",
+				"description": "The user agent to use when dereferencing URIs."},
 }
 
 KEY_ORDER = ["@context", "id", "@id", "type", "@type", "motivation", "label", "profile", 
@@ -99,12 +101,17 @@ class Upgrader(object):
 			print(msg)
 
 	def retrieve_resource(self, uri):
-		resp = requests.get(uri, verify=False)
+		headers = {
+			"Accept": "*/*",
+			"User-Agent": self.user_agent,
+		}
+
+		resp = requests.get(uri, verify=False, headers=headers)
 		try:
 			val = resp.json()
 		except:
 			try:
-				val = json.loads(r.text)
+				val = json.loads(resp.text)
 			except:
 				val = {}
 		return val

@@ -26,7 +26,7 @@ FLAGS = {
 	"ext_ok": {"prop": "ext_ok", "default": False,
 		"description": "If true, then extensions are allowed and will be copied across. \
 		If false, then they will raise an error."},
-    "default_lang": {"prop": "default_lang", "default": "@none",
+    "default_lang": {"prop": "default_lang", "default": "none",
     	"description": "The default language to use when adding values to language maps."},
     "deref_links": {"prop": "deref_links", "default": True,
     	"description": "If true, the conversion will dereference external content resources to look for format and type."},

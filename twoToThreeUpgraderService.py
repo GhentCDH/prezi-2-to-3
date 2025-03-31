@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import sys
+import requests
 try:
     # python3
     from urllib.request import urlopen, HTTPError
@@ -29,6 +30,10 @@ class Service(object):
         self.default_flags = {}
 
     def fetch(self, url):
+        headers = {
+			"Accept": "*/*",
+			"User-Agent": self.user_agent,
+		}
         try:
             wh = urlopen(url)
         except HTTPError as wh:
@@ -62,21 +67,29 @@ class Service(object):
             data = json.loads(b)
         return self.do_upgrade(data)
 
-    def do_GET_upgrade(self):
+    def do_GET_upgrade(self):       
+        # get request url
         url = request.query.get('url', '')
         url = url.strip()
         parsed_url = urlparse(url)
         if not parsed_url.scheme.startswith('http'):
             return self.return_json({'okay': 0, 'error': 'URLs must use HTTP or HTTPS', 'url': url})
+        
+        # check if url is valid
         try:
-            (data, webhandle) = self.fetch(url)
+            headers = {
+                "Accept": "*/*",
+                "User-Agent": request.query.get('user_agent', FLAGS['user_agent']['default']),
+            }
+
+            resp = requests.get(url, verify=False, headers=headers)
         except Exception as error:
             print(error)
             return self.return_json({'okay': 0, 'error': 'Cannot fetch url', 'url': url})
 
         # catch if this is invalid JSON e.g. using a non IIIF resoruces like www.google.com
         try:
-            data = json.loads(data)
+            data = resp.json()
         except Exception as error:
             return self.return_json({'okay': 0, 'error': 'Invalid JSON for supplied url.', 'url': url, 'json_error': str(error)})
 
@@ -91,7 +104,7 @@ class Service(object):
                 elif val == "False":
                     val = False
                 flags[f] = val
-
+                
         try:
             response = self.do_upgrade(data, flags)
         except Exception as e:

@@ -57,10 +57,10 @@ class TestManifest(unittest.TestCase):
 		self.assertTrue('rights' in self.results)
 		self.assertEqual(self.results['rights'], lic2)
 		self.assertTrue('metadata' in self.results)
-		# Find lic as a value in @none
+		# Find lic as a value in none
 		found = False
 		for pair in self.results['metadata']:			
-			if '@none' in pair['value'] and lic in pair['value']['@none']:
+			if 'none' in pair['value'] and lic in pair['value']['none']:
 				found = True
 		self.assertTrue(found)
 
@@ -79,19 +79,19 @@ class TestManifest(unittest.TestCase):
 
 	def test_languagemap(self):
 		self.assertEqual(type(self.results['label']), dict)
-		self.assertTrue('@none' in self.results['label'])
-		self.assertEqual(self.results['label']['@none'], ["Manifest Label"])
+		self.assertTrue('none' in self.results['label'])
+		self.assertEqual(self.results['label']['none'], ["Manifest Label"])
 		self.assertTrue('metadata' in self.results)
 		md = self.results['metadata']
 		self.assertEqual(type(md[0]['label']), dict)
-		self.assertEqual(type(md[0]['label']['@none']), list)
-		self.assertEqual(md[0]['label']['@none'][0], "MD Label 1")
+		self.assertEqual(type(md[0]['label']['none']), list)
+		self.assertEqual(md[0]['label']['none'][0], "MD Label 1")
 		self.assertEqual(type(md[0]['value']), dict)		
-		self.assertEqual(type(md[0]['value']['@none']), list)
-		self.assertEqual(md[0]['value']['@none'][0], "MD Value 1")
+		self.assertEqual(type(md[0]['value']['none']), list)
+		self.assertEqual(md[0]['value']['none'][0], "MD Value 1")
 
 		# md[1] has two values 
-		self.assertEqual(len(md[1]['value']['@none']), 2)
+		self.assertEqual(len(md[1]['value']['none']), 2)
 		# md[2] has en and fr values
 		self.assertTrue('en' in md[2]['value'])
 		self.assertTrue('fr' in md[2]['value'])
@@ -101,9 +101,9 @@ class TestManifest(unittest.TestCase):
 			# look in metadata
 			found = 0
 			for md in self.results['metadata']:
-				if md['label']['@none'][0] == "Description":
+				if md['label']['none'][0] == "Description":
 					found = 1
-					self.assertEqual(md['value']['@none'][0], 
+					self.assertEqual(md['value']['none'][0], 
 						"This is a description of the Manifest")					
 			# ensure it was generated 
 			self.assertEqual(found, 1)
@@ -111,8 +111,8 @@ class TestManifest(unittest.TestCase):
 			# look in summary
 			self.assertTrue('summary' in self.results)
 			self.assertEqual(type(self.results['summary']), dict)
-			self.assertTrue('@none' in self.results['summary'])
-			self.assertEqual(self.results['summary']['@none'][0], 
+			self.assertTrue('none' in self.results['summary'])
+			self.assertEqual(self.results['summary']['none'][0], 
 				"This is a description of the Manifest")
 
 	def test_ranges(self):

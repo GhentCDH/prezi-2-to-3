@@ -838,6 +838,13 @@ class Upgrader(object):
 			# could be a list with extensions etc
 			del what['@context']
 
+			# check if v3 context
+			orig_context = [orig_context] if not type(orig_context) == list else orig_context
+			if "http://iiif.io/api/presentation/3/context.json" in orig_context or \
+				"https://iiif.io/api/presentation/3/context.json" in orig_context:
+				# v3 context, so no need to process
+				return what
+
 		# First update types, so we can switch on it
 		what = self.fix_type(what)
 		typ = what.get('type', '')
@@ -851,6 +858,13 @@ class Upgrader(object):
 			# Add back in the v3 context
 			if type(orig_context) == list:
 				# XXX process extensions
+				if 'http://iiif.io/api/presentation/2/context.json' in orig_context:
+					orig_context.remove('http://iiif.io/api/presentation/2/context.json')
+				if 'https://iiif.io/api/presentation/2/context.json' in orig_context:
+					orig_context.remove('https://iiif.io/api/presentation/2/context.json')
+				what['@context'] = orig_context
+				what['@context'].append('http://www.w3.org/ns/anno.jsonld')
+				what['@context'].append('http://iiif.io/api/presentation/3/context.json')
 				pass
 			else:
 				what['@context'] = [

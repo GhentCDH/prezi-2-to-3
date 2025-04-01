@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # default flags currently but if flags are assessible then could convert them to use --ext_ok=true using ArgumentParser
     upgrader = Upgrader(flags=vars(args))  # create an upgrader
     if 'http' in manifest: # should catch https as well
-        v3 = upgrader.process_uri(manifest)
+        v3 = upgrader.process_uri(manifest, True)
     else:
         v3 = upgrader.process_cached(manifest)
 
